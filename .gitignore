@@ -1,0 +1,7 @@
+KerasBaseline.py
+*.h5
+TestPhotos.zip
+*.jpg
+*.hdf5
+MnistPics
+Operators
