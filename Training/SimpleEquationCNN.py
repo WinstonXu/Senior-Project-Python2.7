@@ -6,12 +6,13 @@ from keras.layers import Convolution2D
 import os
 
 def loadCompositePics():
-    size = 100
+    train_size = 90
+    test_size = 10
     f = h5py.File(os.path.join(os.path.dirname(__file__), "Dataset.hdf5"), 'r')
-    x = f['train-img'][:size]
-    y = f['train-label'][:size]
-    z = f['test-img'][:size]
-    a = f['test-label'][:size]
+    x = f['train-img'][:train_size]
+    y = f['train-label'][:train_size]
+    z = f['test-img'][:test_size]
+    a = f['test-label'][:test_size]
 
     print x.shape, y.shape
     # x = f['x_train'][:size]
@@ -19,8 +20,8 @@ def loadCompositePics():
     x *= 1 / 255.
     z *= 1 / 255.
     # print X.shape
-    X2d = np.reshape(x, (size, 84, 28, 1))
-    Z2d = np.reshape(z, (size, 84,28,1))
+    X2d = np.reshape(x, (train_size, 84, 28, 1))
+    Z2d = np.reshape(z, (test_size, 84,28,1))
 
     y = np.array(y)
     a = np.array(y)

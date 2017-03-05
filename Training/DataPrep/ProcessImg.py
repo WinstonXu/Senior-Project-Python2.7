@@ -505,4 +505,4 @@ if __name__ == "__main__":
     # loadData("Dataset.hdf5")
     #realLifeTest()
     # makeDataset(25000)
-    finalDataset(50000,50000)
+    finalDataset(90000,10000)
