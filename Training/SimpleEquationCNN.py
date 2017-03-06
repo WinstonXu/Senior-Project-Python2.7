@@ -9,28 +9,28 @@ def loadCompositePics():
     train_size = 90
     test_size = 10
     f = h5py.File(os.path.join(os.path.dirname(__file__), "Dataset.hdf5"), 'r')
-    x = f['train-img'][:train_size]
-    y = f['train-label'][:train_size]
-    z = f['test-img'][:test_size]
-    a = f['test-label'][:test_size]
+    train_img = f['train-img'][:train_size]
+    train_label = f['train-label'][:train_size]
+    test_img = f['test-img'][:test_size]
+    test_label = f['test-label'][:test_size]
 
-    print x.shape, y.shape
+    # print x.shape, y.shape
     # x = f['x_train'][:size]
 
-    x *= 1 / 255.
-    z *= 1 / 255.
+    train_img *= 1 / 255.
+    test_img *= 1 / 255.
     # print X.shape
-    X2d = np.reshape(x, (train_size, 84, 28, 1))
-    Z2d = np.reshape(z, (test_size, 84,28,1))
+    train_2d = np.reshape(train_img, (train_size, 84, 28, 1))
+    test_2d = np.reshape(test_img, (test_size, 84,28,1))
 
-    y = np.array(y)
-    a = np.array(y)
-    perm = np.random.permutation(range(len(x)))
-    perm2 = np.random.permutation(range(len(z)))
-    trainpics = X2d[perm]
-    trainlabels = y[perm]
-    testpic = Z2d[perm2]
-    testlabels = a[perm2]
+    train_label = np.array(train_label)
+    test_label = np.array(train_label)
+    perm = np.random.permutation(train_size)
+    perm2 = np.random.permutation(test_size)
+    trainpics = train_2d[perm]
+    trainlabels = train_label[perm]
+    testpic = test_2d[perm2]
+    testlabels = test_label[perm2]
     # X_train, X_test = X[:len(X) / 2], X[len(X) / 2:]
     # y_train, y_test = Y[:len(y) / 2], Y[len(y) / 2:]
 
@@ -53,21 +53,21 @@ def createConv():
 
     # First convolutional layer
     #change convolution
-    model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(84,28,1)))
+    model.add(Convolution2D(32, 5, 5, border_mode='valid', input_shape=(84,28,1)))
     model.add(Activation('relu'))
     #
     # Second convolutional layer
     #change kernel
-    model.add(Convolution2D(64, 3, 3))
+    model.add(Convolution2D(64, 5, 5))
     model.add(Activation('relu'))
 
     # model.add(Convolution2D(64, 5, 5))
     # model.add(Activation('relu'))
 
     model.add(Flatten())
-    model.add(Dense(300))
+    model.add(Dense(1000))
     model.add(Activation('sigmoid'))
-    model.add(Dropout(0.1))
+    # model.add(Dropout(0.1))
 
     model.add(Dense(24))
     model.add(Activation('sigmoid'))
@@ -78,32 +78,33 @@ def createConv():
 
     return model
 
-def test(model, X_train, X_test, y_train, y_test):
-    predicted = model.predict(X_train)
+def test(model, train_img, test_img, train_label, test_label):
+    # print train_img.shape, train_label.shape, test_img.shape, test_label.shape
+    predicted = model.predict(train_img)
     total = len(predicted)*3.0
     count = 0
 
     for i in range(len(predicted)):
-        if np.argmax(predicted[i][:10]) == np.argmax(y_train[i][:10]):
+        if np.argmax(predicted[i][:10]) == np.argmax(train_label[i][:10]):
             count += 1
-        if np.argmax(predicted[i][14:]) == np.argmax(y_train[i][14:]):
+        if np.argmax(predicted[i][14:]) == np.argmax(train_label[i][14:]):
             count += 1
-        if np.argmax(predicted[i][10:14]) == np.argmax(y_train[i][10:14]):
+        if np.argmax(predicted[i][10:14]) == np.argmax(train_label[i][10:14]):
             count +=1
         # print predicted[i][:10], y_test[i][:10]
         # print predicted[i][13:],y_test[i][13:]
     print "Training Set: ", count/total
 
-    predicted = model.predict(X_test)
+    predicted = model.predict(test_img)
     total = len(predicted)*3.0
     count = 0
 
     for i in range(len(predicted)):
-        if np.argmax(predicted[i][:10]) == np.argmax(y_test[i][:10]):
+        if np.argmax(predicted[i][:10]) == np.argmax(test_label[i][:10]):
             count += 1
-        if np.argmax(predicted[i][14:]) == np.argmax(y_test[i][14:]):
+        if np.argmax(predicted[i][14:]) == np.argmax(test_label[i][14:]):
             count += 1
-        if np.argmax(predicted[i][10:14]) == np.argmax(y_test[i][10:14]):
+        if np.argmax(predicted[i][10:14]) == np.argmax(test_label[i][10:14]):
             count += 1
         # print predicted[i][:10], y_test[i][:10]
         # print predicted[i][13:],y_test[i][13:]
@@ -123,19 +124,19 @@ if __name__ == "__main__":
     # model = createDense()
 
     # X_train, X_test, y_train, y_test, r_test, r_label = loadCompositePics()
-    X_train, X_test, y_train, y_test = loadCompositePics()
-    print X_train.shape
+    train_img, test_img, train_label, test_label = loadCompositePics()
+    print train_img.shape
     model = createConv()
 
     minibatch_size = 32
+    for i in range(50):
+        model.fit(train_img, train_label,
+                  batch_size=minibatch_size,
+                  nb_epoch=1,
+                  validation_data=(test_img, test_label),
+                  verbose=1)
 
-    model.fit(X_train, y_train,
-              batch_size=minibatch_size,
-              nb_epoch=50,
-              validation_data=(X_test, y_test),
-              verbose=1)
-
-    test(model, X_train, X_test, y_train, y_test)
+        test(model, train_img, test_img, train_label, test_label)
     save_model(model)
     # predicted = model.predict(r_test)
     # total = len(predicted) * 3.0

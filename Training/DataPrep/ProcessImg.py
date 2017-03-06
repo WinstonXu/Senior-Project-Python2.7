@@ -388,6 +388,7 @@ def stitchPic(samplesize, numlist, oplist, picsize):
         labelarr.append(label)
         if i % 1000 == 0:
             print label
+            finalIm.show()
     return picarr, labelarr
 
 def slantPic(samplesize,numlist, oplist, picsize):
@@ -413,7 +414,7 @@ def slantPic(samplesize,numlist, oplist, picsize):
         labelarr.append(label)
         if i%10000 == 0:
           print label
-          # finalIm.show()
+          finalIm.show()
     return picarr, labelarr
 
 def zoomPic(samplesize, numlist, oplist, picsize):
@@ -438,7 +439,7 @@ def zoomPic(samplesize, numlist, oplist, picsize):
         labelarr.append(label)
         if i % 10000 == 0:
             print label
-            # finalIm.show()
+            finalIm.show()
     return picarr, labelarr
 
 def translateData(samplesize, numlist, oplist, picsize):
@@ -463,7 +464,7 @@ def translateData(samplesize, numlist, oplist, picsize):
         labelarr.append(label)
         if i % 10000 == 0:
             print label
-            # finalIm.show()
+            finalIm.show()
     return picarr, labelarr
 
 def translate(image):
