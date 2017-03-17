@@ -9,10 +9,10 @@ def loadCompositePics():
     train_size = 90
     test_size = 10
     f = h5py.File(os.path.join(os.path.dirname(__file__), "Dataset.hdf5"), 'r')
-    train_img = f['train-img'][:train_size]
-    train_label = f['train-label'][:train_size]
-    test_img = f['test-img'][:test_size]
-    test_label = f['test-label'][:test_size]
+    train_img = f['train-img'][:]
+    train_label = f['train-label'][:]
+    test_img = f['test-img'][:]
+    test_label = f['test-label'][:]
 
     # print x.shape, y.shape
     # x = f['x_train'][:size]
@@ -20,30 +20,20 @@ def loadCompositePics():
     train_img *= 1 / 255.
     test_img *= 1 / 255.
     # print X.shape
-    train_2d = np.reshape(train_img, (train_size, 84, 28, 1))
-    test_2d = np.reshape(test_img, (test_size, 84,28,1))
+    train_2d = np.reshape(train_img, (len(train_img), 84, 28, 1))
+    test_2d = np.reshape(test_img, (len(test_img), 84,28,1))
 
     train_label = np.array(train_label)
-    test_label = np.array(train_label)
-    perm = np.random.permutation(train_size)
-    perm2 = np.random.permutation(test_size)
-    trainpics = train_2d[perm]
-    trainlabels = train_label[perm]
-    testpic = test_2d[perm2]
-    testlabels = test_label[perm2]
-    # X_train, X_test = X[:len(X) / 2], X[len(X) / 2:]
-    # y_train, y_test = Y[:len(y) / 2], Y[len(y) / 2:]
+    test_label = np.array(test_label)
 
-    # rtest = f['real-img'][:30]
-    # rlabel = f['real-label'][:30]
-    # print rtest.shape, rlabel.shape
-    # rtest *= 1/255.
-    # rtest = np.reshape(rtest, (29, 84,28,1))
-    # perm2 = np.random.permutation(range(len(rtest)))
-    # rtest = rtest[perm2]
-    # rlabel = np.array(rlabel)
-    # rlabel = rlabel[perm2]
-    # return X_train, X_test, y_train, y_test,rtest, rlabel
+    perm = np.random.permutation(len(train_img))
+    perm2 = np.random.permutation(len(test_img))
+
+    trainpics = train_2d[perm][:train_size]
+    trainlabels = train_label[perm][:train_size]
+    testpic = test_2d[perm2][:test_size]
+    testlabels = test_label[perm2][:test_size]
+
     print trainpics.shape, trainlabels.shape, testpic.shape, testlabels.shape
     return trainpics,testpic,trainlabels,testlabels
 
@@ -129,7 +119,7 @@ if __name__ == "__main__":
     model = createConv()
 
     minibatch_size = 32
-    for i in range(50):
+    for i in range(25):
         model.fit(train_img, train_label,
                   batch_size=minibatch_size,
                   nb_epoch=1,
