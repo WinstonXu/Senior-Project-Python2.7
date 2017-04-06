@@ -70,7 +70,7 @@ def build_store(store=_default_name, mnist="mnist.pkl.gz"):
 #
 def makeHDF5(image, label):
     pixelData = image.getdata()
-    pixelData = np.asarray(pixelData, dtype=np.float64).reshape((image.size[1], image.size[0]))
+    pixelData = np.asarray(pixelData, dtype=np.uint8).reshape((image.size[1], image.size[0]))
     return pixelData, label
 
 #Needs to be changed
@@ -376,6 +376,7 @@ def stitchPic(samplesize, numlist, oplist, picsize):
         target1 = int(num1file.split("-")[1][0])
         target2 = int(num2file.split("-")[1][0])
         target3 = opfile.split(" ")[0]
+        # print target1,target3, target2
         part1 = Image.open(os.path.join(_picbasedir, 'MnistPics', num1file))
         part2 = Image.open(os.path.join(_picbasedir, 'MnistPics', num2file))
         part3 = Image.open(os.path.join(_picbasedir, 'Operators', opfile))
@@ -386,9 +387,9 @@ def stitchPic(samplesize, numlist, oplist, picsize):
         pic, label = makeHDF5(finalIm, resultVector(target1, target2, target3))
         picarr.append(pic)
         labelarr.append(label)
-        if i % 1000 == 0:
-            print label
-            finalIm.show()
+        # if i % 1000 == 0:
+        # print label
+        # finalIm.show()
     return picarr, labelarr
 
 def slantPic(samplesize,numlist, oplist, picsize):
@@ -402,6 +403,7 @@ def slantPic(samplesize,numlist, oplist, picsize):
         target1 = int(num1file.split("-")[1][0])
         target2 = int(num2file.split("-")[1][0])
         target3 = opfile.split(" ")[0]
+        # print target1, target3, target2
         part1 = Image.open(os.path.join(_picbasedir, 'MnistPics', num1file)).rotate(random.choice(rotations))
         part2 = Image.open(os.path.join(_picbasedir, 'MnistPics', num2file)).rotate(random.choice(rotations))
         part3 = Image.open(os.path.join(_picbasedir, 'Operators', opfile)).rotate(random.choice(rotations))
@@ -412,9 +414,9 @@ def slantPic(samplesize,numlist, oplist, picsize):
         pic,label = makeHDF5(finalIm, resultVector(target1,target2,target3))
         picarr.append(pic)
         labelarr.append(label)
-        if i%10000 == 0:
-          print label
-          finalIm.show()
+        # if i%10000 == 0:
+        # print label
+        # finalIm.show()
     return picarr, labelarr
 
 def zoomPic(samplesize, numlist, oplist, picsize):
@@ -427,6 +429,7 @@ def zoomPic(samplesize, numlist, oplist, picsize):
         target1 = int(num1file.split("-")[1][0])
         target2 = int(num2file.split("-")[1][0])
         target3 = opfile.split(" ")[0]
+        # print target1, target3, target2
         part1 = Image.open(os.path.join(_picbasedir, 'MnistPics', num1file)).resize((35,35)).crop((1,1,29,29))
         part2 = Image.open(os.path.join(_picbasedir, 'MnistPics', num2file)).resize((35,35)).crop((1,1,29,29))
         part3 = Image.open(os.path.join(_picbasedir, 'Operators', opfile)).resize((35,35)).crop((1,1,29,29))
@@ -437,9 +440,9 @@ def zoomPic(samplesize, numlist, oplist, picsize):
         pic, label = makeHDF5(finalIm, resultVector(target1, target2, target3))
         picarr.append(pic)
         labelarr.append(label)
-        if i % 10000 == 0:
-            print label
-            finalIm.show()
+        # if i % 10000 == 0:
+        # print label
+        # finalIm.show()
     return picarr, labelarr
 
 def translateData(samplesize, numlist, oplist, picsize):
@@ -452,6 +455,7 @@ def translateData(samplesize, numlist, oplist, picsize):
         target1 = int(num1file.split("-")[1][0])
         target2 = int(num2file.split("-")[1][0])
         target3 = opfile.split(" ")[0]
+        # print target1, target3, target2
         part1 = translate(Image.open(os.path.join(_picbasedir, 'MnistPics', num1file))).resize((28,28))
         part2 = translate(Image.open(os.path.join(_picbasedir, 'MnistPics', num2file))).resize((28,28))
         part3 = translate(Image.open(os.path.join(_picbasedir, 'Operators', opfile))).resize((28,28))
@@ -462,9 +466,9 @@ def translateData(samplesize, numlist, oplist, picsize):
         pic, label = makeHDF5(finalIm, resultVector(target1, target2, target3))
         picarr.append(pic)
         labelarr.append(label)
-        if i % 10000 == 0:
-            print label
-            finalIm.show()
+        # if i % 10000 == 0:
+        # print label
+        # finalIm.show()
     return picarr, labelarr
 
 def translate(image):

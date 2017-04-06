@@ -5,3 +5,6 @@ TestPhotos.zip
 *.hdf5
 MnistPics
 Operators
+SeePic.py
+MatthewVersion.py
+ServerVersionLoadNetwork.py

@@ -17,7 +17,7 @@ def testmodel(file_name):
         # newim = ImageEnhance.Contrast(im)
         # newim = newim.enhance(2.5).save()
         pixelData = im.getdata()
-        pixelData = np.asarray(pixelData, dtype=np.float64).reshape((1, im.size[0], im.size[1], 1))
+        pixelData = np.asarray(pixelData, dtype=np.uint8).reshape((1, im.size[0], im.size[1], 1))
         pixelData *= 1 / 255.
         res = model.predict(pixelData)
         # print res.shape

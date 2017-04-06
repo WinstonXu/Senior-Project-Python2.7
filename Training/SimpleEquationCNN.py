@@ -6,19 +6,20 @@ from keras.layers import Convolution2D
 import os
 
 def loadCompositePics():
-    train_size = 90
-    test_size = 10
+    train_size = 900
+    test_size = 100
     f = h5py.File(os.path.join(os.path.dirname(__file__), "Dataset.hdf5"), 'r')
     train_img = f['train-img'][:]
     train_label = f['train-label'][:]
     test_img = f['test-img'][:]
     test_label = f['test-label'][:]
+    # print type(train_img)
 
     # print x.shape, y.shape
     # x = f['x_train'][:size]
-
-    train_img *= 1 / 255.
-    test_img *= 1 / 255.
+    #
+    train_img =train_img*(1 / 255.)
+    test_img = test_img* (1 / 255.)
     # print X.shape
     train_2d = np.reshape(train_img, (len(train_img), 84, 28, 1))
     test_2d = np.reshape(test_img, (len(test_img), 84,28,1))
@@ -55,9 +56,9 @@ def createConv():
     # model.add(Activation('relu'))
 
     model.add(Flatten())
-    model.add(Dense(1000))
+    model.add(Dense(350))
     model.add(Activation('sigmoid'))
-    # model.add(Dropout(0.1))
+    model.add(Dropout(0.3))
 
     model.add(Dense(24))
     model.add(Activation('sigmoid'))
@@ -119,7 +120,7 @@ if __name__ == "__main__":
     model = createConv()
 
     minibatch_size = 32
-    for i in range(25):
+    for i in range(140):
         model.fit(train_img, train_label,
                   batch_size=minibatch_size,
                   nb_epoch=1,
