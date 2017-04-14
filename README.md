@@ -1,7 +1,7 @@
 Install Python 2.7
 https://www.python.org/downloads/
 
-Go to command line and type these commands:
+Go to command line and type these 3 commands:
 pip install h5py
 pip install keras
 pip install Pillow
